@@ -4,10 +4,11 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <script src="./bundle.js" type="module"></script>
+    <title>Gift Idea: Assignment One</title>
+    <script src="./bundle.js"></script>
     <link rel="stylesheet" href="./main.css" />
   </head>
+
   <body>
     <header>
       <h1>Fire-Giftr</h1>
@@ -15,36 +16,15 @@
     </header>
     <main>
       <section class="people">
-        <h2>People <button id="btnAddPerson">Add Person</button></h2>
-        <ul class="person-list">
-          <li data-id="asdfasdf" class="person">
-            <p class="name">Sample Name</p>
-            <p class="dob">April 9</p>
-          </li>
-          <li data-id="asdfasdf" class="person selected">
-            <p class="name">Sample Name</p>
-            <p class="dob">April 9</p>
-          </li>
-          <li data-id="asdfasdf" class="person">
-            <p class="name">Sample Name</p>
-            <p class="dob">April 9</p>
-          </li>
-        </ul>
+        <h2>People<button id="btnAddPerson">Add Person</button></h2>
+        <div class="person-list"></div>
       </section>
       <section class="ideas">
         <h2>Ideas <button id="btnAddIdea">Add Idea</button></h2>
-        <ul class="idea-list">
-          <li class="idea" data-id="">
-            <label for="chk-uniqueid"
-              ><input type="checkbox" id="chk-uniqueid" /> Bought</label
-            >
-            <p class="title">Sample Gift Idea</p>
-            <p class="location">url or store name</p>
-          </li>
-        </ul>
+        <div class="idea-list"></div>
       </section>
     </main>
-    <section class="overlay active">
+    <section class="overlay">
       <dialog id="dlgPerson" class="">
         <h2>Add Person</h2>
         <p>
@@ -71,19 +51,20 @@
           <label for="day">Birth Day:</label>
           <input type="number" id="day" name="day" min="1" max="31" value="1" />
         </p>
+
         <p>
           <button id="btnCancelPerson">Cancel</button>
-          <button id="btnSavePerson">Save</button>
+          <button id="btnCreatePerson">Save</button>
         </p>
       </dialog>
-      <dialog id="dlgIdea" class="active">
+      <dialog id="dlgIdea" class="">
         <h2>Add Gift Idea</h2>
         <p>
           <label for="title">Title:</label>
           <input
             type="text"
-            id="title"
-            name="title"
+            id="titleAdd"
+            name="titleAdd"
             placeholder="describe the gift"
           />
         </p>
@@ -91,8 +72,81 @@
           <label for="location">Location:</label>
           <input
             type="text"
-            id="location"
-            name="location"
+            id="locationAdd"
+            name="locationAdd"
+            placeholder="store or website"
+          />
+        </p>
+        <p>
+          <button id="btnCancelIdea">Cancel</button>
+          <button id="btnCreateIdea">Save</button>
+        </p>
+      </dialog>
+
+      <!--section for editing person and Gifts-->
+      <dialog class="edit" id="editPerson">
+        <h2>Edit Person</h2>
+        <p>
+          <label for="name">Name:</label>
+          <input
+            type="text"
+            id="nameEdit"
+            name="name"
+            placeholder="person's name"
+          />
+        </p>
+        <p>
+          <label for="month">Birth Month:</label>
+          <input
+            type="number"
+            id="monthEdit"
+            name="month"
+            min="1"
+            max="12"
+            value="1"
+          />
+        </p>
+        <p>
+          <label for="day">Birth Day:</label>
+          <input
+            type="number"
+            id="dayEdit"
+            name="day"
+            min="1"
+            max="31"
+            value="1"
+          />
+        </p>
+        <p>
+          <button id="btnCancelPerson">Cancel</button>
+          <button id="btnSavePerson">Save</button>
+        </p>
+      </dialog>
+      <!--delete and cancel delete layout : for both idea and person-->
+      <!--delete person-->
+      <dialog id="deletePersonSection" class="delete">
+        <h2>Delete</h2>
+        <p>Are you sure you would like to delete this?</p>
+        <button id="yesDeletePerson">delete</button>
+        <button id="noDeletePerson">cancel</button>
+      </dialog>
+      <dialog id="editIdea">
+        <h2>Save Gift Idea</h2>
+        <p>
+          <label for="title">Title:</label>
+          <input
+            type="text"
+            id="titleEdit"
+            name="titleEdit"
+            placeholder="describe the gift"
+          />
+        </p>
+        <p>
+          <label for="location">Location:</label>
+          <input
+            type="text"
+            id="locationEdit"
+            name="locationEdit"
             placeholder="store or website"
           />
         </p>
@@ -100,6 +154,14 @@
           <button id="btnCancelIdea">Cancel</button>
           <button id="btnSaveIdea">Save</button>
         </p>
+      </dialog>
+      <dialog id="deleteIdea">
+        <h2>Delete</h2>
+        <p>Are you sure you would like to delete this?</p>
+        <div class="deleteButtons">
+          <button id="yesDeleteIdea">delete</button>
+          <button id="noDeleteIdea">cancel</button>
+        </div>
       </dialog>
     </section>
   </body>
