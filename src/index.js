@@ -125,11 +125,16 @@ function initializeEventListeners() {
 
 function attemptLogin(ev) {-
   ev.preventDefault();
+
   signInWithPopup(getAuth(), provider).then(async (res) => {
     authUser = res.user;
+    const usersColRef = collection(db, 'users');
+    setDoc(doc(usersColRef, user.uid), {
+      displayName: user.displayName
+    }, {merge:true}); 
     toggleButtons(true);
     displayUserDetails(authUser);
-    await etPeople();
+    await getPeople();
   }).catch(error => {
     alert('Error when authenticating...');
   })
@@ -288,7 +293,12 @@ function hideDeletePersonOverlay(ev) {
 
 /**people functionality */
 //getPerson functionality
+async function getUser() {
+  const ref = doc(db, "users", FirebaseAuth.instance.currentUser.uid);
+  return ref; //if you need the user reference
+}
 async function getPeople() {
+  const authUser = getUser();
   people = [];
   const querySnapshot = await getDocs(collection(db, `/users/${authUser?.uid}/people`)); //get a reference to the people collection
   querySnapshot.forEach((doc) => {
