@@ -1,4 +1,3 @@
-
 import {
   getFirestore, //initialze firestore service
   collection,
@@ -14,11 +13,17 @@ import {
   updateDoc,
   deleteDoc,
   arrayRemove,
-  DocumentReference
+  DocumentReference,
 } from "firebase/firestore";
 
-import { GithubAuthProvider, getAuth, signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
-import { initializeApp } from "firebase/app"
+import {
+  GithubAuthProvider,
+  getAuth,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration object
 //next step: connect to firebase project from the front end
@@ -38,7 +43,7 @@ const auth = getAuth(app);
 auth.languageCode = "en";
 const provider = new GithubAuthProvider();
 provider.setCustomParameters({
-  allow_signup: "truauthUsere", 
+  allow_signup: "truauthUsere",
 });
 
 let authUser = null;
@@ -49,7 +54,7 @@ onAuthStateChanged(auth, async (user) => {
   } else {
     toggleButtons(false);
   }
-})
+});
 
 const db = getFirestore(app); //referenece for the db
 // db.settings({ timestampsInSnapshots: true });
@@ -123,61 +128,64 @@ function initializeEventListeners() {
     .addEventListener("click", attemptLogOut);
 }
 
-function attemptLogin(ev) {-
-  ev.preventDefault();
+function attemptLogin(ev) {
+  -ev.preventDefault();
 
-  signInWithPopup(getAuth(), provider).then(async (res) => {
-    authUser = res.user;
-    const usersColRef = collection(db, 'users');
-    setDoc(doc(usersColRef, user.uid), {
-      displayName: user.displayName
-    }, {merge:true}); 
-    toggleButtons(true);
-    displayUserDetails(authUser);
-    await getPeople();
-  }).catch(error => {
-    alert('Error when authenticating...');
-  })
+  signInWithPopup(getAuth(), provider)
+    .then(async (res) => {
+      authUser = res.user;
+      const usersColRef = collection(db, "users");
+      setDoc(
+        doc(usersColRef, user.uid),
+        {
+          displayName: user.displayName,
+        },
+        { merge: true }
+      );
+      toggleButtons(true);
+      displayUserDetails(authUser);
+      await getPeople();
+    })
+    .catch((error) => {
+      alert("Error when authenticating...");
+    });
 }
 
-//on refresh functionality. make sure the user is still logged in 
-function validateWithToken(token){
+//on refresh functionality. make sure the user is still logged in
+function validateWithToken(token) {
   const credential = GithubAuthProvider.credential(token);
   signInWithCredential(auth, credential)
     .then((result) => {
-      //the token and credential were still valid 
+      //the token and credential were still valid
     })
     .catch((error) => {
       // Handle Errors here.
       const errorCode = error.code;
       const errorMessage = error.message;
-    })
+    });
 }
 
-
-
-
-
-
-function attemptLogOut(ev){
+function attemptLogOut(ev) {
   ev.preventDefault();
-  signOut(getAuth()).then(() => {
-    authUser = null;
-    toggleButtons(false);
-    displayUserDetails(null);
-    clearUserData();
-  }).catch(error => {
-    alert('Error when authenticating...');
-  })
+  signOut(getAuth())
+    .then(() => {
+      authUser = null;
+      toggleButtons(false);
+      displayUserDetails(null);
+      clearUserData();
+    })
+    .catch((error) => {
+      alert("Error when authenticating...");
+    });
 }
 
 function toggleButtons(flag) {
   if (!flag) {
-    document.getElementById("btnAddPerson").classList.add('hide-button');
-    document.getElementById("btnAddIdea").classList.add('hide-button');
+    document.getElementById("btnAddPerson").classList.add("hide-button");
+    document.getElementById("btnAddIdea").classList.add("hide-button");
   } else {
-    document.getElementById("btnAddPerson").classList.remove('hide-button');
-    document.getElementById("btnAddIdea").classList.remove('hide-button');
+    document.getElementById("btnAddPerson").classList.remove("hide-button");
+    document.getElementById("btnAddIdea").classList.remove("hide-button");
   }
 }
 
@@ -185,10 +193,9 @@ function displayUserDetails(user) {
   if (user) {
     document.getElementById("user-name").innerText = user.displayName;
     document.getElementById("user-email").innerText = user.email;
-  } 
-  else {
-    document.getElementById("user-name").innerHTML = '';
-    document.getElementById("user-email").innerHTML = '';
+  } else {
+    document.getElementById("user-name").innerHTML = "";
+    document.getElementById("user-email").innerHTML = "";
   }
 }
 
@@ -300,7 +307,9 @@ async function getUser() {
 async function getPeople() {
   const authUser = getUser();
   people = [];
-  const querySnapshot = await getDocs(collection(db, `/users/${authUser?.uid}/people`)); //get a reference to the people collection
+  const querySnapshot = await getDocs(
+    collection(db, `/users/${authUser?.uid}/people`)
+  ); //get a reference to the people collection
   querySnapshot.forEach((doc) => {
     //getting the data
     const data = doc.data();
@@ -382,7 +391,10 @@ function handleSelectPerson(ev) {
 
 async function updateIdea(ev, element, idea) {
   ev.preventDefault();
-  const ideaRef = doc(collection(db, `/users/${authUser?.uid}/gift-ideas`), idea.id);
+  const ideaRef = doc(
+    collection(db, `/users/${authUser?.uid}/gift-ideas`),
+    idea.id
+  );
 
   let title = document.getElementById("titleEdit").value;
   let location = document.getElementById("locationEdit").value;
@@ -401,7 +413,10 @@ async function updateIdea(ev, element, idea) {
 
 async function updatePerson(ev, element, person) {
   ev.preventDefault();
-  const personRef = doc(collection(db, `/users/${authUser?.uid}/people`), person.id); //get reference for people
+  const personRef = doc(
+    collection(db, `/users/${authUser?.uid}/people`),
+    person.id
+  ); //get reference for people
 
   let name = document.getElementById("nameEdit").value;
   let month = document.getElementById("monthEdit").value;
@@ -422,7 +437,9 @@ async function updatePerson(ev, element, person) {
 }
 
 async function deletePerson(ev, element, person) {
-  await deleteDoc(doc(collection(db,`/users/${authUser?.uid}/people`), person.id));
+  await deleteDoc(
+    doc(collection(db, `/users/${authUser?.uid}/people`), person.id)
+  );
 
   document.querySelector(".overlay").classList.remove("active");
   document.getElementById("deletePersonSection").classList.remove("active");
@@ -433,7 +450,9 @@ async function deletePerson(ev, element, person) {
 }
 
 async function deleteIdea(ev, element, idea) {
-  await deleteDoc(doc(collection(db, `/users/${authUser?.uid}/gift-ideas`), idea.id));
+  await deleteDoc(
+    doc(collection(db, `/users/${authUser?.uid}/gift-ideas`), idea.id)
+  );
 
   document.querySelector(".overlay").classList.remove("active");
   document.getElementById("deletePersonSection").classList.remove("active");
@@ -457,7 +476,10 @@ async function handleSelectedIdea(ev) {
 }
 
 async function getIdeas(id) {
-  const ideaCollectionRef = collection(db, `/users/${authUser?.uid}/gift-ideas`); //get reference for gift teams
+  const ideaCollectionRef = collection(
+    db,
+    `/users/${authUser?.uid}/gift-ideas`
+  ); //get reference for gift teams
   const docs = query(ideaCollectionRef, where("person-id", "==", id));
 
   const querySnapshot = await getDocs(docs);
@@ -535,7 +557,10 @@ async function createIdea() {
   };
 
   try {
-    const docRef = await addDoc(collection(db, `/users/${authUser?.uid}/gift-ideas`), idea);
+    const docRef = await addDoc(
+      collection(db, `/users/${authUser?.uid}/gift-ideas`),
+      idea
+    );
     idea.id = docRef.id;
 
     document.getElementById("titleAdd").value = "";
@@ -560,7 +585,10 @@ async function createPerson() {
     "birth-day": day,
   };
   try {
-    const docRef = await addDoc(collection(db, `/users/${authUser?.uid}/people`), person);
+    const docRef = await addDoc(
+      collection(db, `/users/${authUser?.uid}/people`),
+      person
+    );
     console.log("Document written with ID: ", docRef.id);
     document.getElementById("name").value = "";
     document.getElementById("month").value = "";
@@ -573,3 +601,6 @@ async function createPerson() {
     console.error("Error adding document: ", err);
   }
 }
+
+
+
