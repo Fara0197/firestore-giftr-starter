@@ -150,7 +150,7 @@ function attemptLogin(ev) {
       alert("Error when authenticating...");
     });
 }
-
+ƒ
 async function getUser() {
   const ref = doc(db, "users", FirebaseAuth.instance.currentUser.uid);
   return ref; //if you need the user reference

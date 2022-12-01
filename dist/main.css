@@ -41,24 +41,26 @@ header h2 {
 
 .auth-nav {
   width: 100%;
-  padding: 5px;
+  padding: 2px;
   color: var(--dark-purple);
-  display: flex;
+  display: grid;
   justify-content: center;
    margin: 0 auto;
   padding: 1rem;
 }
 
 .auth-nav button {
-  font-size: 1.4rem;
-  margin-right: 2rem;
-  padding: 0.5rem 2rem;
+  font-size: 1rem;
   border: 1px solid var(--dark-purple);
-  border-radius: 5rem;
+  border-radius: 3rem;
   background-color: #fff;
   color: var(--dark-purple);
   cursor: pointer;
+  margin: 0.3rem;
+  padding: 0.5rem ;
 }
+
+
 main {
   display: flex;
   flex-direction: row;
@@ -96,7 +98,7 @@ section h2 {
   padding-bottom: 0.5rem;
 }
 section h2 > button {
-  margin-right: 4rem;
+  margin-right: 9rem;
   padding: 0.1rem 2rem;
   border: 1px solid var(--dark-purple);
   background-color: #fff;
@@ -259,7 +261,7 @@ dialog.active h2 {
   background-color: var(--dark-purple);
   color: #fff;
   padding: 1rem 3rem;
-  font-size: 2rem;
+  font-size: 1rem;
 }
 dialog.active p {
   display: flex;
@@ -308,10 +310,20 @@ li {
 font-weight: bold;
 }
 
-@media screen and (max-width: 500px) {
-header{
-  display: block;
-  text-align: left;
+@media screen and (max-width: 900px) {
+main{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+.auth-nav{
+display: grid;
+padding: 2rem;
+
+}
+.auth-nav button{
+  margin: 0.3rem;
+  padding: 0.5rem ;
 }
 }
 
