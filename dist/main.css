@@ -308,3 +308,10 @@ li {
 font-weight: bold;
 }
 
+@media screen and (max-width: 500px) {
+header{
+  display: block;
+  text-align: left;
+}
+}
+

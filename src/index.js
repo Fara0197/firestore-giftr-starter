@@ -151,6 +151,11 @@ function attemptLogin(ev) {
     });
 }
 
+async function getUser() {
+  const ref = doc(db, "users", FirebaseAuth.instance.currentUser.uid);
+  return ref; //if you need the user reference
+}
+
 //on refresh functionality. make sure the user is still logged in
 function validateWithToken(token) {
   const credential = GithubAuthProvider.credential(token);
@@ -300,16 +305,17 @@ function hideDeletePersonOverlay(ev) {
 
 /**people functionality */
 //getPerson functionality
-async function getUser() {
-  const ref = doc(db, "users", FirebaseAuth.instance.currentUser.uid);
-  return ref; //if you need the user reference
-}
+
 async function getPeople() {
-  const authUser = getUser();
+  const userRef = getUser();
   people = [];
-  const querySnapshot = await getDocs(
-    collection(db, `/users/${authUser?.uid}/people`)
+  const peopleCollectionRef = collection(db, "people");
+    const docs = query(
+      peopleCollectionRef,
+      where('owner', '==', userRef)
+    
   ); //get a reference to the people collection
+  const querySnapshot = await getDocs(docs);
   querySnapshot.forEach((doc) => {
     //getting the data
     const data = doc.data();
