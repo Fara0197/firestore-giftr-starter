@@ -157,18 +157,7 @@ async function getUser() {
 }
 
 //on refresh functionality. make sure the user is still logged in
-function validateWithToken(token) {
-  const credential = GithubAuthProvider.credential(token);
-  signInWithCredential(auth, credential)
-    .then((result) => {
-      //the token and credential were still valid
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-    });
-}
+
 
 function attemptLogOut(ev) {
   ev.preventDefault();
