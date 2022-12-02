@@ -164,6 +164,7 @@ function validateWithToken(token){
   const credential = GithubAuthProvider.credential(token);
   signInWithCredential(auth, credential)
     .then((result) => {
+      authUser = result.user;
       //the token and credential were still valid 
     })
     .catch((error) => {
@@ -318,7 +319,6 @@ function hideDeletePersonOverlay(ev) {
 
 async function getPeople() {
   const userRef = getUser();
-  people = [];
   const peopleCollectionRef = collection(db, "people");
   const docs = query(peopleCollectionRef, where("owner", "==", userRef)); //get a reference to the people collection
   const querySnapshot = await getDocs(docs);
