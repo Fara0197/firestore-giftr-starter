@@ -22,6 +22,8 @@ import {
   signInWithPopup,
   signOut,
   onAuthStateChanged,
+  setPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
@@ -128,36 +130,55 @@ function initializeEventListeners() {
     .addEventListener("click", attemptLogOut);
 }
 
-function attemptLogin(ev) {
-  -ev.preventDefault();
+async function attemptLogin(ev) {
+  ev.preventDefault();
 
-  signInWithPopup(getAuth(), provider)
-    .then(async (res) => {
-      authUser = res.user;
-      const usersColRef = collection(db, "users");
-      setDoc(
-        doc(usersColRef, user.uid),
-        {
-          displayName: user.displayName,
-        },
-        { merge: true }
-      );
-      toggleButtons(true);
-      displayUserDetails(authUser);
-      await getPeople();
+  setPersistence(auth, browserLocalPersistence)
+    .then(() => {
+      const provider = new GithubAuthProvider();
+      validateWithToken()
+      signInWithPopup(getAuth(), provider).then(async (res) => {
+        const credential = GithubAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        sessionStorage.setItem("accessToken", token);
+        authUser = res.user;
+        const usersColRef = collection(db, "users");
+        setDoc(
+          doc(usersColRef, user.uid),
+          {
+            displayName: user.displayName,
+          },
+          { merge: true }
+        );
+        toggleButtons(true);
+        displayUserDetails(authUser);
+        await getPeople();
+      });
     })
     .catch((error) => {
       alert("Error when authenticating...");
     });
 }
-ƒ
+
+function validateWithToken(token){
+  const credential = GithubAuthProvider.credential(token);
+  signInWithCredential(auth, credential)
+    .then((result) => {
+      //the token and credential were still valid 
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+    })
+}
+
 async function getUser() {
   const ref = doc(db, "users", FirebaseAuth.instance.currentUser.uid);
   return ref; //if you need the user reference
 }
 
 //on refresh functionality. make sure the user is still logged in
-
 
 function attemptLogOut(ev) {
   ev.preventDefault();
@@ -299,11 +320,7 @@ async function getPeople() {
   const userRef = getUser();
   people = [];
   const peopleCollectionRef = collection(db, "people");
-    const docs = query(
-      peopleCollectionRef,
-      where('owner', '==', userRef)
-    
-  ); //get a reference to the people collection
+  const docs = query(peopleCollectionRef, where("owner", "==", userRef)); //get a reference to the people collection
   const querySnapshot = await getDocs(docs);
   querySnapshot.forEach((doc) => {
     //getting the data
@@ -596,6 +613,3 @@ async function createPerson() {
     console.error("Error adding document: ", err);
   }
 }
-
-
-
